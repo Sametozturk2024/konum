@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use  App\Models\Locations;
 use App\Http\Requests\StoreLocationRequest;
-
+use App\Http\Requests\MapLocationRequest;
+use App\Services\distanceCalculation;
 class LocationsController extends Controller
 {
     /**
@@ -96,10 +97,36 @@ class LocationsController extends Controller
         }
     }
 
-    public  function routing (string $id)
+    public function maps(MapLocationRequest $request)
     {
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $locations = Locations::where('user_id', auth()->id())->get();
 
-        return response()->json(['message' => 'Konum bulunamad'], 201);
+        $distanceCalculator = new distanceCalculation(); // Correct instantiation
+        $maps = [];
 
+        foreach ($locations as $location) {
+            // Corrected variable typo: $location->longitude
+            $distance = $distanceCalculator->distance(
+                $latitude,
+                $longitude,
+                $location->latitude,
+                $location->longitude
+            );
+
+            $maps[] = [
+                'name' => $location->name,
+                'marker_color' => $location->marker_color,
+                'km' => $distance
+            ];
+        }
+
+        // Sort by distance (ascending order)
+        usort($maps, function ($a, $b) {
+            return $a['km'] <=> $b['km'];
+        });
+
+        return response()->json(['data' => $maps]);
     }
 }

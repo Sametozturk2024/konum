@@ -19,7 +19,7 @@ Route::middleware(['auth:sanctum','throttle:api'])->group(function () {
     Route::get('/get-location/{slug}', [LocationsController::class, 'show']);
     Route::post('/edit-location/{slug}', [LocationsController::class, 'update']);
     Route::post('/destroy-location/{slug}', [LocationsController::class, 'destroy']);
-    Route::get('/routing/{slug}', [LocationsController::class, 'routing']);
+    Route::post('/maps', [LocationsController::class, 'maps']);
 
 
 });
