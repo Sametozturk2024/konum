@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class locations extends Model
+class Location extends Model
 {
-    protected $fillable= [
+    protected $fillable = [
         'user_id',
         'name',
         'latitude',
@@ -15,7 +15,4 @@ class locations extends Model
         'description',
         'orders',
     ];
-
-
-
 }
